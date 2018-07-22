@@ -99,6 +99,17 @@ class ReactCog:
 
         await ctx.channel.send(embed = embed)
 
+    @commands.command(name="remove")
+    @commands.guild_only()
+    async def remove_react(self, ctx, *, arg=None):
+        # Get reactions for guild
+        if arg is None:
+            await ctx.channel.send("A keyword must be provided.")
+            return
+
+        mongo["guilds"].update_one({"guild_id": ctx.guild.id}, {"$pull": {"message_reacts": {"word": arg}}})
+        await ctx.channel.send(f"Successfully removed all keywoard reactions using '{arg}'")
+
 
 def setup(bot):
     bot.add_cog(ReactCog(bot))
