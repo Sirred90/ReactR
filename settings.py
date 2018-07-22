@@ -75,7 +75,7 @@ class ReactCog:
         # Get reactions for guild
         guild_data = mongo["guilds"].find({"guild_id": ctx.guild.id})[0]
         
-        embed = discord.Embed(title=f"Reactions for guild *{ctx.guild.name}*")
+        embed = discord.Embed(title=f"Reactions for *{ctx.guild.name}*", color=0x53C1DE)
 
         reaction_list = ""
 
