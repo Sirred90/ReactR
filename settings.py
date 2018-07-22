@@ -68,14 +68,37 @@ class ReactCog:
         # reaction is probably valid. Find and update the guild's document
         mongo["guilds"].update_one({"guild_id": ctx.guild.id}, {"$addToSet": {"message_reacts": {"word": keyword, "reaction": reaction}}})
         await ctx.channel.send("Emoji added :)")
-    async def on_message(self, message):
-        # Get guild from mongo
 
-        guildData = mongo["guilds"].find({"guild_id": message.guild.id})[0]
+    @commands.command(name="list")
+    @commands.guild_only()
+    async def list_emoji(self, ctx, *, arg=None):
+        # Get reactions for guild
+        guild_data = mongo["guilds"].find({"guild_id": ctx.guild.id})[0]
+        
+        embed = discord.Embed(title=f"Reactions for guild *{ctx.guild.name}*")
 
-        for value in guildData["message_reacts"]:
-            if value["word"] in message.content:
-                await message.add_reaction(value["reaction"])
+        reaction_list = ""
+
+        for value in guild_data["message_reacts"]:
+
+            # Assume reaction is unicode
+            reaction_text = value['reaction']
+            try:
+                int(value['reaction'])
+                for emoji in list(ctx.guild.emojis):
+                    if str(emoji.id) == value['reaction']:
+                        reaction_text = str(emoji)
+                        break
+
+            except Exception:
+                pass
+
+            reaction_list += f"{value['word']}: {reaction_text}\n"
+             
+        embed.add_field(name="Keywoard reactions", value=reaction_list, inline=False)
+
+        await ctx.channel.send(embed = embed)
+
 
 def setup(bot):
     bot.add_cog(ReactCog(bot))
