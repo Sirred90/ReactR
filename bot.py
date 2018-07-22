@@ -41,7 +41,7 @@ def add_guild(guild_id):
         "user_reacts": []
     }
 
-    mongo["reactions"].insert_one(doc)
+    mongo["guilds"].insert_one(doc)
     print(f"Added guild {guild_id} to mongodb")
 
 @bot.event
@@ -53,14 +53,14 @@ async def on_ready():
         # See if reactions database contains a collection whose guild is the guild id
         guild_id = guild.id
         
-        num = mongo["reactions"].count_documents({"guild_id": guild_id})
+        num = mongo["guilds"].count_documents({"guild_id": guild_id})
 
         if num == 0:
             add_guild(guild_id)
             
 @bot.event
 async def on_guild_join(guild):
-    if mongo["reactions"].count_documents({"guild_id": guild.id}) == 0:
+    if mongo["guilds"].count_documents({"guild_id": guild.id}) == 0:
         add_guild(guild.id)
 
 if __name__ == '__main__':

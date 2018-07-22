@@ -18,7 +18,7 @@ class ReactCog:
     async def on_message(self, message):
         # Get guild from mongo
 
-        guildData = mongo["reactions"].find({"guild_id": message.guild.id})[0]
+        guildData = mongo["guilds"].find({"guild_id": message.guild.id})[0]
 
         for value in guildData["message_reacts"]:
             if value["word"] in message.content:
