@@ -22,7 +22,23 @@ class ReactCog:
 
         for value in guildData["message_reacts"]:
             if value["word"] in message.content:
-                await message.add_reaction(value["reaction"])
+                try:
+                    # Check if reaction is an id (throws error if it isn't an int)
+                    int(value["reaction"])
+
+                    guild_emojis = list(message.guild.emojis)
+
+                    for emoji in guild_emojis:
+                        if str(emoji.id) == value["reaction"]:
+                            print("Trying to add?")
+                            try:
+                                await message.add_reaction(emoji)
+                            except discord.errors.HTTPException:
+                                pass
+
+                except ValueError:
+                    # Emoji isn't id, assume it's unicode
+                    await message.add_reaction(value["reaction"])
 
 def setup(bot):
     bot.add_cog(ReactCog(bot))
