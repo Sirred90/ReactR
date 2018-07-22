@@ -107,7 +107,8 @@ class ReactCog:
             await ctx.channel.send("A keyword must be provided.")
             return
 
-        mongo["guilds"].update_one({"guild_id": ctx.guild.id}, {"$pull": {"message_reacts": {"message_reacts.$.word": arg}}})
+        mongo["guilds"].update_one({"guild_id": ctx.guild.id}, {"$pull": {"message_reacts": {"word": arg}}})
+        await ctx.channel.send(f"Successfully removed all keywoard reactions using '{arg}'")
 
 
 def setup(bot):
