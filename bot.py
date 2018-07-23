@@ -3,6 +3,7 @@
 # misc imports
 import json
 import sys
+import os
 
 # discord imports
 import discord
@@ -14,7 +15,7 @@ import pymongo
 # load config
 config = {}
 try:
-    f = open("config.json", 'r')
+    f = open(os.path.dirname(os.path.realpath(__file__)) + "/config.json", 'r')
     config = json.load(f)
     f.close()
 except:
