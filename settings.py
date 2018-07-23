@@ -130,7 +130,7 @@ class SettingsCog:
     #
     #*******************************
 
-    @commands.command(name="remove", aliases=['r'] help="Removes all keyword-reactions where the keyword is the supplied argument.")
+    @commands.command(name="remove", aliases=['r'], help="Removes all keyword-reactions where the keyword is the supplied argument.")
     @commands.guild_only()
     async def remove_keywoard(self, ctx, *, keyword):
         if not self.has_perms(ctx.author, ctx.channel):
@@ -154,7 +154,7 @@ class SettingsCog:
     #
     #*******************************
 
-    @commands.command(name='addrole', aliases=['addroles', 'addr'] help="Allows a role to use admin commands. @mention role to add it, multiple roles can be mentioned.")
+    @commands.command(name='addrole', aliases=['addroles', 'addr'], help="Allows a role to use admin commands. @mention role to add it, multiple roles can be mentioned.")
     @commands.guild_only()
     async def add_role(self, ctx, role: str):
         if not self.has_perms(ctx.author, ctx.channel):
@@ -178,7 +178,7 @@ class SettingsCog:
     #
     #*******************************
 
-    @commands.command(name='removerole', aliases=['removeroles', 'remover'] help="Disallows a role from using admin commands. @mention role to remove it, multiple roles can be mentioned.")
+    @commands.command(name='removerole', aliases=['removeroles', 'remover'], help="Disallows a role from using admin commands. @mention role to remove it, multiple roles can be mentioned.")
     @commands.guild_only()
     async def remove_role(self, ctx, role: str):
         if not self.has_perms(ctx.author, ctx.channel):
