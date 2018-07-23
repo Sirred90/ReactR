@@ -38,7 +38,8 @@ def add_guild(guild_id):
     doc = {
         "guild_id": guild_id,
         "message_reacts": [],
-        "user_reacts": []
+        "user_reacts": [],
+        "admin_roles": []
     }
 
     mongo["guilds"].insert_one(doc)
