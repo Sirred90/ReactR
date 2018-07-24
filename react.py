@@ -21,7 +21,7 @@ class ReactCog:
         guildData = mongo["guilds"].find({"guild_id": message.guild.id})[0]
 
         for value in guildData["message_reacts"]:
-            if value["word"] in message.content:
+            if value["word"] in message.content.lower():
                 try:
                     # Check if reaction is an id (throws error if it isn't an int)
                     int(value["reaction"])
