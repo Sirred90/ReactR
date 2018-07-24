@@ -13,7 +13,7 @@ class SettingsCog:
 
     def has_perms(self, user, channel):
         if user.permissions_in(channel).administrator:
-            #return True
+            return True
             pass
 
         user_roles = [role.id for role in user.roles]
