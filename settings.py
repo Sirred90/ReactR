@@ -237,5 +237,39 @@ class SettingsCog:
         else:
             raise(error)
 
+    #*******************************
+    # settings command
+    #
+    #*******************************
+
+    @commands.group(name='settings', help="Used to manage settings.")
+    @commands.guild_only()
+    async def settings(self, ctx):
+        if ctx.invoked_subcommand is None:
+            # Get settings from mongodb
+            settings = dict(mongo["guilds"].find({"guild_id": ctx.guild.id}, {"_id": 0, "prefix": 1}).next())
+
+            settingsString = ""
+
+            for k,v in settings.items():
+                settingsString += f"{k}: `{v}`"
+
+            embed = discord.Embed(title=f"Settings for *{ctx.guild.name}*", color=0x53C1DE)
+            embed.add_field(name=u"--------", value=settingsString, inline=False)
+
+            await ctx.channel.send(embed = embed)
+
+
+    @settings.command(name='prefix', help="Changes bot prefix to `pref`, leave pref blank to list current prefix.")
+    async def settings_prefix(self, ctx, pref=None):
+        if pref == None:
+            # List current prefix
+            prefix = mongo["guilds"].find({"guild_id": ctx.guild.id}, {"_id": 0, "prefix": 1}).next()["prefix"] # Get prefix from mongodb
+            await ctx.channel.send(f"The current prefix is `{prefix}`")
+
+        else:
+            mongo["guilds"].update({"guild_id": ctx.guild.id}, {"$set": {"prefix": pref}})
+            await ctx.channel.send(f"Prefix changed to `{pref}`")
+
 def setup(bot):
     bot.add_cog(SettingsCog(bot))

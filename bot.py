@@ -26,10 +26,9 @@ except:
 mongo = pymongo.MongoClient(f"mongodb+srv://{config['mongo_user']}:{config['mongo_pass']}@{config['mongo_host']}/test?retryWrites=true")["reactr"]
 
 def get_prefix(bot, message):
-    # TODO: Configurable prefixes
-    
-    # Use @bot or prefix to activate bot
-    return commands.when_mentioned_or(',')(bot, message)
+    prefix = mongo["guilds"].find({"guild_id": message.guild.id}, {"_id": 0, "prefix": 1}).next()["prefix"] # Get prefix from mongodb
+
+    return commands.when_mentioned_or(prefix)(bot, message)
 
 bot = commands.Bot(command_prefix=get_prefix)
 
@@ -40,7 +39,8 @@ def add_guild(guild_id):
         "guild_id": guild_id,
         "message_reacts": [],
         "user_reacts": [],
-        "admin_roles": []
+        "admin_roles": [],
+        "prefix": ","
     }
 
     mongo["guilds"].insert_one(doc)
