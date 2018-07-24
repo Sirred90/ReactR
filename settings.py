@@ -119,6 +119,9 @@ class SettingsCog:
                 pass
 
             reaction_list += f"{value['word']}: {reaction_text}\n"
+
+        if reaction_list == "":
+            reaction_list = "There are no reactions defined yet, add one with `add keyword emoji`"
              
         embed.add_field(name="Keywoard reactions", value=reaction_list, inline=False)
 
