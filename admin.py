@@ -47,7 +47,9 @@ class AdminCog:
         embed.add_field(name="Servers", value=f"Count: {len(self.bot.guilds)}")
         await ctx.channel.send(embed=embed)
 
-        
+    async def on_guild_join(self, guild):
+        await self.bot.get_channel(471833598153195531).send(f"Joined guild {guild.name} - {guild.id}")
+
 
 def setup(bot):
     bot.add_cog(AdminCog(bot))
