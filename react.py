@@ -15,30 +15,50 @@ class ReactCog:
     async def on_ready(self):
         print("React cog loaded successfuly")
 
+    async def add_react(self, message, reaction):
+        try:
+            # Check if reaction is an id (throws error if it isn't an int)
+            int(reaction)
+
+            guild_emojis = list(message.guild.emojis)
+
+            for emoji in guild_emojis:
+                if str(emoji.id) == reaction:
+                    try:
+                        await message.add_reaction(emoji)
+                    except discord.errors.HTTPException:
+                        pass
+
+        except ValueError:
+            # Emoji isn't id, assume it's unicode
+            await message.add_reaction(reaction)
+
+    async def check_string(self, message, string, reactions):
+        for value in reactions["message_reacts"]:
+            if value["word"] in string.lower():
+                 await self.add_react(message, value["reaction"])
+
     async def on_message(self, message):
         # Get guild from mongo
 
         guildData = mongo["guilds"].find({"guild_id": message.guild.id})[0]
 
-        for value in guildData["message_reacts"]:
-            if value["word"] in message.content.lower():
-                try:
-                    # Check if reaction is an id (throws error if it isn't an int)
-                    int(value["reaction"])
+        await self.check_string(message, message.content, guildData)
 
-                    guild_emojis = list(message.guild.emojis)
+        for embed in message.embeds:
+            if(isinstance(embed.title, str)):
+                await self.check_string(message, embed.title, guildData)
+            if(isinstance(embed.description, str)):
+                await self.check_string(message, embed.description, guildData)
 
-                    for emoji in guild_emojis:
-                        if str(emoji.id) == value["reaction"]:
-                            print("Trying to add?")
-                            try:
-                                await message.add_reaction(emoji)
-                            except discord.errors.HTTPException:
-                                pass
+            for field in embed.fields:
+                if(isinstance(field.name, str)):
+                    await self.check_string(message, field.name, guildData)
+                if(isinstance(field.value, str)):
+                    await self.check_string(message, field.value, guildData)
 
-                except ValueError:
-                    # Emoji isn't id, assume it's unicode
-                    await message.add_reaction(value["reaction"])
+            
+                
 
 def setup(bot):
     bot.add_cog(ReactCog(bot))
