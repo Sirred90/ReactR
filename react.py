@@ -38,7 +38,7 @@ class ReactCog:
             if value["word"] in string.lower():
                  await self.add_react(message, value["reaction"])
 
-    async def on_message(self, message):
+    async def on_message(self, message):     
         # Get guild from mongo
 
         guildData = mongo["guilds"].find({"guild_id": message.guild.id})[0]
@@ -51,11 +51,17 @@ class ReactCog:
             if(isinstance(embed.description, str)):
                 await self.check_string(message, embed.description, guildData)
 
+            if(isinstance(embed.author.url, str)):
+               await self.check_string(message, embed.author.url, guildData)
+            if(isinstance(embed.author.name, str)):
+                await self.check_string(message, embed.author.name, guildData)
+
             for field in embed.fields:
                 if(isinstance(field.name, str)):
                     await self.check_string(message, field.name, guildData)
                 if(isinstance(field.value, str)):
                     await self.check_string(message, field.value, guildData)
+                    
 
             
                 
