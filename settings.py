@@ -34,7 +34,7 @@ class SettingsCog:
     #
     #*******************************
 
-    @commands.command(name='add', aliases=['a'], help="Adds a new keywoard-reaction to this guild. `keyword` argument must be a string, `emoji` argument must be a single emoji.")
+    @commands.command(name='add', aliases=['a'], help="Adds a new keyword-reaction to this guild. `keyword` argument must be a string, `emoji` argument must be a single emoji.")
     @commands.guild_only()
     async def add_keyword(self, ctx, keyword: str, emoji: str):
         if not self.has_perms(ctx.author, ctx.channel):
@@ -94,7 +94,7 @@ class SettingsCog:
     #
     #*******************************
 
-    @commands.command(name="list", help="Lists all the keywoard-reactions for this guild.")
+    @commands.command(name="list", help="Lists all the keyword-reactions for this guild.")
     @commands.guild_only()
     async def list_emoji(self, ctx):
         # Get reactions for guild
@@ -123,7 +123,7 @@ class SettingsCog:
         if reaction_list == "":
             reaction_list = "There are no reactions defined yet, add one with `add keyword emoji`"
              
-        embed.add_field(name="Keywoard reactions", value=reaction_list, inline=False)
+        embed.add_field(name="Keyword reactions", value=reaction_list, inline=False)
 
         await ctx.channel.send(embed = embed)
 
@@ -134,7 +134,7 @@ class SettingsCog:
 
     @commands.command(name="remove", aliases=['r'], help="Removes all keyword-reactions where the keyword is the supplied argument.")
     @commands.guild_only()
-    async def remove_keywoard(self, ctx, *, keyword):
+    async def remove_keyword(self, ctx, *, keyword):
         if not self.has_perms(ctx.author, ctx.channel):
             await ctx.channel.send("You do not have permissions to run that command.")
             return
@@ -142,10 +142,10 @@ class SettingsCog:
         # Get reactions for guild
 
         mongo["guilds"].update_one({"guild_id": ctx.guild.id}, {"$pull": {"message_reacts": {"word": keyword}}})
-        await ctx.channel.send(f"Successfully removed all keywoard reactions using '{keyword}'")
+        await ctx.channel.send(f"Successfully removed all keyword reactions using '{keyword}'")
 
-    @remove_keywoard.error
-    async def remove_keywoard_error(self, ctx, error):
+    @remove_keyword.error
+    async def remove_keyword_error(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.channel.send("You must specify arguments. Use `,help remove` for more information.")
         else:
